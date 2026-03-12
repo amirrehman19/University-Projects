@@ -1,271 +1,199 @@
-# DC Motor Speed Control System Using Arduino
-
+# ⚙️ DC Motor Speed Control System Using Arduino
 ## Microprocessor Systems (EE-222)
 
-**Department of Electronics and Power Engineering**
-**Pakistan Navy Engineering College (PNEC)**
-**National University of Sciences and Technology (NUST), Karachi**
+> 🤖 *Precision PWM-based motor control — smooth ramps, step-wise speed patterns, and real-time simulation verification.*
+
+[![University](https://img.shields.io/badge/University-NUST%20PNEC-darkblue?style=flat-square)](https://www.nust.edu.pk)
+[![Course](https://img.shields.io/badge/Course-EE--222%20Microprocessor%20Systems-blue?style=flat-square)]()
+[![MCU](https://img.shields.io/badge/MCU-Arduino%20Uno-00979D?style=flat-square&logo=arduino)](https://www.arduino.cc)
+[![Driver](https://img.shields.io/badge/Driver-L293N%20H--Bridge-red?style=flat-square)]()
+[![Simulation](https://img.shields.io/badge/Simulation-Proteus-blueviolet?style=flat-square)]()
+[![Status](https://img.shields.io/badge/Status-Completed-success?style=flat-square)]()
 
 ---
 
-# Table of Contents
+## 📌 Project Overview
 
-1. Introduction
-2. Objectives
-3. Problem Description
-4. System Description
-5. Circuit Design
-6. Code Implementation
-7. Simulation Results
-8. Hardware Design
-9. Components Used
-10. Challenges and Engineering Considerations
-11. Conclusion
+A **microcontroller-based DC motor speed control system** using **PWM (Pulse Width Modulation)** with an Arduino Uno and L293N motor driver. The system executes two predefined speed patterns simulating real industrial motor control behavior — including smooth acceleration/deceleration and step-wise speed transitions.
+
+> 📍 *Department of Electronics & Power Engineering — Pakistan Navy Engineering College (PNEC), NUST, Karachi*
 
 ---
 
-# 1. Introduction
+## 🎯 Objectives
 
-This project focuses on designing a **microcontroller-based system for controlling the speed of a DC motor**. The system is implemented using an Arduino-based platform and a motor driver module to regulate motor speed through **Pulse Width Modulation (PWM)**.
-
-The motor operates according to two predefined patterns that simulate **industrial motor control behavior**, including gradual acceleration, deceleration, and step-wise speed changes. The project demonstrates practical concepts in **embedded programming, motor control, and circuit design**.
-
-The system was tested through simulation to verify correct speed variations and timing behavior.
-
----
-
-# 2. Objectives
-
-The primary objective of this project is to design and implement a **microcontroller-controlled DC motor system** capable of operating under defined speed patterns.
-
-The system demonstrates:
-
-• PWM-based motor speed control
-• Embedded programming using a microcontroller platform
-• Implementation of timed speed variations
-• Simulation and verification of motor control behavior
-
-This type of system is commonly used in **industrial automation, robotics, and motion control applications**.
+- ✅ PWM-based motor speed control
+- ✅ Embedded programming using Arduino
+- ✅ Implementation of timed speed variation patterns
+- ✅ Simulation and hardware verification of motor behavior
 
 ---
 
-# 3. Problem Description
+## 🧩 System Components
 
-The DC motor must operate according to **two predefined patterns**.
-
-## Pattern 1
-
-• Gradually increase motor speed to maximum within **1.5 minutes**
-• Gradually decrease speed to zero within the next **1.5 minutes**
-• Finally **turn OFF the motor**
-
-This pattern demonstrates **smooth acceleration and deceleration control**.
+| Component | Specification | Qty | Role |
+|-----------|--------------|-----|------|
+| `Arduino Uno` | ATmega328P, 5V logic, 6× PWM | 1 | Central controller |
+| `L293N Motor Driver` | Dual H-Bridge | 1 | Motor interface & power |
+| `DC Motor` | 12V, 0.3A, Brushed | 1 | Load / actuator |
+| `Power Supply` | 12V Adapter | 1 | Motor power |
+| Wires & Resistors | As required | — | Connections |
 
 ---
 
-## Pattern 2
+## 🔌 Circuit Pin Connections
 
-• Motor runs at **slow speed for 30 seconds**
-• Speed **doubles for the next 30 seconds**
-• Speed **doubles again for the next 30 seconds**
-• Then the speed **reduces in reverse order with the same time intervals**
-• Motor finally **turns OFF**
+| Arduino Pin | Motor Driver Pin | Function |
+|-------------|-----------------|---------|
+| **D9** | ENA | PWM speed control signal |
+| **D13** | IN1 | Motor direction control |
+| **D12** | IN2 | Motor direction control |
+| **GND** | GND | Common ground reference |
+| **5V** | VCC | Logic level supply |
 
-This pattern demonstrates **step-wise motor speed control**.
-
----
-
-# 4. System Description
-
-The system consists of a **microcontroller, motor driver, DC motor, and power supply** working together to control motor speed and direction.
+> ⚡ Motor runs on **12V external supply** — L293N safely interfaces the 5V Arduino logic with the 12V motor power domain.
 
 ---
 
-## Microcontroller
+## 📋 Speed Patterns
 
-**Arduino Uno (ATmega328P)**
+### 🔁 Pattern 1 — Smooth Ramp Up / Ramp Down
 
-The Arduino Uno serves as the central controller responsible for generating PWM signals to regulate motor speed.
+```
+Speed
+100% │                    ▲▲▲▲▲▲▲▲▲▲▲
+     │               ▲▲▲▲           ▼▼▼▼
+     │          ▲▲▲▲                    ▼▼▼▼
+     │     ▲▲▲▲                             ▼▼▼▼
+  0% │▲▲▲▲                                      ▼▼▼▼▼▶ OFF
+     └────────────────────────────────────────────────▶ Time
+          |←── 1.5 min ──→|←──── 1.5 min ────→|
+```
 
-Key features:
-
-• 8-bit microcontroller
-• Multiple digital I/O pins
-• 6 PWM output channels
-• Easy programming using Arduino IDE
-
----
-
-## Motor Driver
-
-**L293N Dual H-Bridge Motor Driver**
-
-The motor driver acts as an interface between the Arduino and the DC motor.
-
-Functions:
-
-• Allows higher current control
-• Enables bidirectional motor control
-• Accepts PWM signals for speed regulation
+- Gradually increase to **maximum speed** over 1.5 minutes
+- Gradually decrease to **zero** over next 1.5 minutes
+- Motor turns **OFF**
 
 ---
 
-## DC Motor
+### 🔁 Pattern 2 — Step-Wise Speed Control
 
-A **12V brushed DC motor** is used in this system.
+```
+Speed
+100% │              ████████████
+     │              █           █
+ 50% │     █████████            █████████
+     │     █                             █
+ 25% │█████                               █████▶ OFF
+     └────────────────────────────────────────▶ Time
+       |30s |  30s  |   30s   |  30s  | 30s |
+```
 
-Characteristics:
-
-• Continuous rotation
-• PWM speed controllable
-• Suitable for simulation and small automation systems
-
----
-
-## Power Supply
-
-The system uses:
-
-• **12V external supply** for the motor
-• **5V regulated supply** for the microcontroller logic
-
-This ensures proper operation without damaging the controller.
-
----
-
-## Software Tools
-
-The following software tools were used:
-
-• **Arduino IDE** – for programming and uploading code
-• **Proteus Simulation Software** – for testing the circuit and verifying system behavior
+| Step | Duration | Speed Level |
+|------|----------|------------|
+| 1 | 30 seconds | 🐢 Slow |
+| 2 | 30 seconds | 🚶 Double |
+| 3 | 30 seconds | 🏃 Maximum |
+| 4 | 30 seconds | 🚶 Halved |
+| 5 | 30 seconds | 🐢 Slow → OFF |
 
 ---
 
-# 5. Circuit Design
+## 💻 Key Code Concepts
 
-The circuit consists of the Arduino Uno connected to the motor driver module.
+```cpp
+// PWM Speed Control
+analogWrite(ENA, speed);   // 0–255 maps to 0–100% speed
 
-### Pin Connections
+// Direction Control
+digitalWrite(IN1, HIGH);
+digitalWrite(IN2, LOW);
 
-| Arduino Pin | Motor Driver Pin | Function          |
-| ----------- | ---------------- | ----------------- |
-| D9          | ENA              | PWM speed control |
-| D13         | IN1              | Motor direction   |
-| D12         | IN2              | Motor direction   |
-| GND         | GND              | Common ground     |
-| 5V          | VCC              | Logic supply      |
+// Pattern 1 — Gradual ramp
+for (int spd = 0; spd <= 255; spd++) {
+    analogWrite(ENA, spd);
+    delay(352); // ~1.5 min total ramp
+}
 
-The PWM signal from Arduino controls the **duty cycle**, which directly affects motor speed.
-
----
-
-# 6. Code Implementation
-
-The motor control logic is implemented using Arduino code.
-
-The program performs the following operations:
-
-• Initializes motor control pins
-• Generates PWM signals
-• Executes Pattern 1 and Pattern 2
-• Prints speed values to the serial monitor for monitoring
-
-Key features of the implementation include:
-
-• PWM-based speed control
-• Timed delays for pattern execution
-• Serial output for debugging and monitoring
+// Pattern 2 — Step-wise
+int steps[] = {64, 128, 255, 128, 64};
+for (int i = 0; i < 5; i++) {
+    analogWrite(ENA, steps[i]);
+    delay(30000); // 30 seconds each
+}
+```
 
 ---
 
-# 7. Simulation Results
+## 🛠️ Software Tools
 
-The system was simulated using **Proteus simulation software** to verify motor behavior.
-
-## Pattern 1 Result
-
-• Motor speed gradually increases to maximum during the first **1.5 minutes**
-• Speed gradually decreases during the next **1.5 minutes**
-• Motor stops after the cycle completes
-
-This demonstrates **smooth ramp-up and ramp-down motor control**.
+| Tool | Purpose |
+|------|---------|
+| `Arduino IDE` | Programming & code upload |
+| `Proteus` | Circuit simulation & pattern verification |
+| `Serial Monitor` | Real-time speed value debugging |
 
 ---
 
-## Pattern 2 Result
+## ⚠️ Engineering Considerations
 
-The motor follows a step-based speed variation:
-
-• Initial slow speed for **30 seconds**
-• Speed doubles after **30 seconds**
-• Maximum speed reached after **60 seconds**
-• Speed then decreases step-by-step
-• Motor turns **OFF at the end**
-
-This pattern verifies the **correct implementation of timed speed levels**.
+| Challenge | Solution Applied |
+|-----------|----------------|
+| ⏱️ Timing Precision | `delay()` for basic; `millis()` for non-blocking future use |
+| ⚡ Voltage Mismatch | L293N bridges 5V logic ↔ 12V motor safely |
+| 🔧 Speed Resolution | `analogWrite()` gives 256 PWM levels (0–255) |
+| 🧪 Pre-build Testing | Proteus simulation validated both patterns before hardware |
 
 ---
 
-# 8. Hardware Design
+## 📊 Simulation Results
 
-The hardware implementation includes:
+**Pattern 1:**
+- ✅ Smooth speed ramp-up over 1.5 minutes confirmed
+- ✅ Smooth ramp-down to zero confirmed
+- ✅ Clean motor stop at end of cycle
 
-• Arduino Uno microcontroller
-• L293N motor driver module
-• 12V DC motor
-• External power supply
-• Connecting wires and supporting components
-
-The design ensures safe interfacing between the **microcontroller logic (5V)** and **motor power (12V)**.
-
----
-
-# 9. Components Used
-
-| Component           | Specification           | Quantity |
-| ------------------- | ----------------------- | -------- |
-| Arduino Uno         | ATmega328P, 5V logic    | 1        |
-| DC Motor            | 12V, 0.3A               | 1        |
-| L293N Motor Driver  | Dual H-Bridge           | 1        |
-| Power Supply        | 12V Adapter             | 1        |
-| Wires and Resistors | As required             | —        |
-| Simulation Tools    | Proteus and Arduino IDE | —        |
+**Pattern 2:**
+- ✅ Step-wise speed changes verified at correct 30s intervals
+- ✅ Speed doubling/halving confirmed at each step
+- ✅ Final motor OFF state verified
 
 ---
 
-# 10. Challenges and Engineering Considerations
+## 🚀 Future Applications
 
-Several engineering considerations were addressed during the design process.
-
-### Timing Precision
-
-The system uses the `delay()` function to maintain timing intervals. For more advanced applications, **millis() based timing** could be implemented to enable non-blocking operation.
-
-### PWM Speed Control
-
-Arduino’s **analogWrite()** function provides PWM signals that control the duty cycle applied to the motor driver, allowing effective speed regulation.
-
-### Voltage Compatibility
-
-The DC motor requires **12V**, while the microcontroller operates at **5V logic levels**. The motor driver ensures proper interfacing between these two voltage domains.
-
-### Simulation Debugging
-
-Proteus simulation enabled visual verification of motor behavior, helping validate the timing patterns before hardware implementation.
+This system can be extended for:
+- 🤖 Robotics & automation
+- 🏭 Conveyor belt systems
+- 🔧 Automated machinery
+- 🌀 Smart fan / pump controllers
+- 🚗 RC vehicle motor control
 
 ---
 
-# 11. Conclusion
+## ✅ Conclusion
 
-The designed system successfully demonstrates **microcontroller-based DC motor speed control** using PWM techniques.
+The Arduino-based DC motor speed control system **successfully demonstrated both speed patterns** using PWM techniques. Simulation results confirmed correct timing, speed transitions, and motor behavior — validating the embedded design before hardware implementation.
 
-The project achieved the required operational patterns, including:
+> *"From microcontroller pulse to motor revolution — embedded control in action."*
 
-• Gradual acceleration and deceleration
-• Step-wise speed variation
-• Accurate timing control
+---
 
-Simulation results confirmed that the system performs as intended. This project provides practical experience in **embedded system design, motor control, and industrial automation concepts**.
+## 🛠️ Tools & Technologies
 
-The design can be further expanded for applications such as **robotics, conveyor systems, automated machinery, and smart motor control systems**.
+`Arduino IDE` · `Proteus Simulation` · `PWM Control` · `L293N H-Bridge` · `ATmega328P` · `Embedded C` · `DC Motor Control` · `Serial Monitor`
+
+---
+
+## 👤 About
+
+| | |
+|-|---|
+| 👨‍💻 **Student** | Amir Rehman |
+| 🏛️ **Institution** | NUST — PNEC, Karachi |
+| 📘 **Course** | EE-222 Microprocessor Systems |
+| 🌐 **GitHub** | [@amirrehman19](https://github.com/amirrehman19) |
+
+---
+
+⬅️ *Back to [University Projects Portfolio](../README.md)*
