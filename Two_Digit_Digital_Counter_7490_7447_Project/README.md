@@ -1,175 +1,167 @@
-# Two-Digit Digital Counter Using 7490 and 7447 ICs
+# 🔢 Two-Digit Digital Counter
+## Using 7490 & 7447 ICs — Count 00 to 99
 
-## Project Overview
+> 🔟 *From push-button to 7-segment display — a complete BCD counting system built from classic digital logic ICs.*
 
-This project demonstrates the design and implementation of a **two-digit digital counter** capable of counting from **00 to 99**. The circuit uses **BCD counters, decoder ICs, and 7-segment displays** to visually represent the count.
-
-Each press of a push-button generates a clock pulse that increments the counter by one. The circuit automatically resets after reaching **99**, returning the display to **00**.
-
-The design illustrates fundamental concepts of **digital electronics**, including binary-coded decimal counting, decoder operation, and display interfacing.
-
----
-
-# 1. Objective
-
-The objective of this project is to design and implement a **2-digit digital counter** that counts from **00 to 99** using BCD counters and 7-segment displays.
-
-The system uses two BCD counters for the units and tens positions, with decoder ICs translating binary outputs into signals suitable for driving the displays.
+[![Domain](https://img.shields.io/badge/Domain-Digital%20Electronics-blue?style=flat-square)]()
+[![ICs](https://img.shields.io/badge/ICs-7490%20%26%207447-darkblue?style=flat-square)]()
+[![Range](https://img.shields.io/badge/Count%20Range-00%20→%2099-green?style=flat-square)]()
+[![Display](https://img.shields.io/badge/Display-7--Segment%20Common%20Anode-orange?style=flat-square)]()
+[![Status](https://img.shields.io/badge/Status-Completed-success?style=flat-square)]()
 
 ---
 
-# 2. Components and Their Functions
+## 📌 Project Overview
 
-## 7490 IC – Binary Coded Decimal Counter
+Design and implementation of a **two-digit digital counter** that counts from **00 to 99** using BCD decade counters, decoder ICs, and 7-segment displays. Each press of a push-button increments the count by one, and the circuit **automatically resets to 00** after reaching 99.
 
-The **7490** is a decade counter that produces a **4-bit Binary Coded Decimal (BCD) output**.
-
-### Key Features
-
-• Counts from **0 to 9**
-• Produces BCD outputs from **0000 to 1001**
-• Automatically resets to **0 after 9**
-• Supports cascading with other counters for multi-digit counting
-
-### Function in the Circuit
-
-Two 7490 counters are used:
-
-• The **first counter** controls the **units digit**
-• The **second counter** controls the **tens digit**
-
-When the units counter completes a full cycle from **0 to 9**, it triggers the tens counter to increment by one.
+This project illustrates core digital electronics concepts including binary-coded decimal counting, IC cascading, decoder operation, and display interfacing.
 
 ---
 
-## 7447 IC – BCD to 7-Segment Decoder
+## 🧩 Key ICs & Their Roles
 
-The **7447 decoder** converts the **4-bit BCD output** from the 7490 counter into signals that drive a **7-segment display**.
+### 7490 — BCD Decade Counter
 
-### Key Features
+| Feature | Detail |
+|---------|--------|
+| Count Range | 0 → 9 (auto-reset) |
+| Output | 4-bit BCD (0000 → 1001) |
+| Cascading | Carry output feeds next counter |
+| Usage in Circuit | 2× — one for units, one for tens |
 
-• Converts BCD inputs to segment control signals
-• Designed for **common-anode 7-segment displays**
-• Uses **active LOW outputs** to illuminate segments
-• Includes additional control inputs such as:
+### 7447 — BCD to 7-Segment Decoder
 
-Lamp Test (LT) – activates all display segments for testing
-Blanking Input (BI) – disables the display when required
-
----
-
-## 7-Segment Displays
-
-A **7-segment display** consists of seven LEDs arranged in a pattern capable of displaying digits from **0 to 9**.
-
-### Features
-
-• Used to visually display the counter output
-• The project uses **common-anode displays**
-• Each segment requires a **current-limiting resistor** to protect the LED
-
-### Current Limiting
-
-Resistors are selected to limit current between:
-
-**12 mA – 20 mA**
-
-This ensures:
-
-• Proper brightness
-• Protection against LED damage
-• Consistent illumination across segments
+| Feature | Detail |
+|---------|--------|
+| Input | 4-bit BCD from 7490 |
+| Output | 7-segment drive signals |
+| Display Type | Common-Anode (active LOW) |
+| Extra Pins | LT (Lamp Test), BI (Blanking Input) |
 
 ---
 
-## Push-Button Switch
+## ⚙️ Circuit Operation
 
-The **push-button switch** acts as the **clock input** for the counter circuit.
-
-### Function
-
-• Each press generates a pulse
-• The pulse increments the counter by **one digit**
-
-The switching configuration determines whether the counter advances on the **press** or **release** of the button.
-
----
-
-# 3. Circuit Functionality
-
-The circuit begins counting from **00**.
-
-Each press of the push-button produces a clock pulse that increments the count.
-
-### Units Counter
-
-The first 7490 counter counts from **0 to 9**, representing the **units digit**.
-
-### Tens Counter
-
-When the units counter completes its cycle and resets, the **tens counter increments by one**.
-
-### Display Conversion
-
-The BCD outputs from each counter are fed into **7447 decoder ICs**, which convert the binary values into signals for the **7-segment displays**.
-
-The displays then show the decimal representation of the count.
+```
+┌──────────────────────────────────────────────────────────┐
+│                 COUNTER OPERATION FLOW                   │
+│                                                          │
+│  🔘 Push Button Press                                    │
+│          ↓                                               │
+│     Clock Pulse Generated                               │
+│          ↓                                               │
+│  ┌───────────────────┐    ┌───────────────────┐         │
+│  │  7490 Counter #1  │    │  7490 Counter #2  │         │
+│  │   (Units Digit)   │───▶│   (Tens Digit)    │         │
+│  │    0 → 9 → 0      │    │    0 → 9 → 0      │         │
+│  └────────┬──────────┘    └────────┬──────────┘         │
+│           ↓                        ↓                    │
+│  ┌────────────────┐      ┌────────────────┐             │
+│  │  7447 Decoder  │      │  7447 Decoder  │             │
+│  │  BCD → 7-Seg   │      │  BCD → 7-Seg   │             │
+│  └────────┬───────┘      └────────┬───────┘             │
+│           ↓                       ↓                     │
+│     ┌──────────┐           ┌──────────┐                 │
+│     │ Display 1│           │ Display 2│                 │
+│     │  (Units) │           │  (Tens)  │                 │
+│     └──────────┘           └──────────┘                 │
+│                                                          │
+│           Shows:  [ 0 0 ] → [ 9 9 ] → [ 0 0 ]          │
+└──────────────────────────────────────────────────────────┘
+```
 
 ---
 
-# 4. Expandability
+## 📟 7-Segment Display Specs
 
-One advantage of this design is its **modular structure**.
-
-Additional counters and displays can easily be added to extend the counting range.
-
-For example:
-
-Adding another **7490 counter and 7447 decoder** creates a **three-digit counter** capable of counting from:
-
-**000 to 999**
-
-This is achieved by connecting the **carry output** of one counter to the **clock input** of the next counter.
+| Parameter | Detail |
+|-----------|--------|
+| Display Type | Common-Anode |
+| Segments | 7 LEDs per digit |
+| Current Range | **12 mA – 20 mA** |
+| Current Limiting | Resistor on each segment |
+| Digits Used | 2 (Units + Tens) |
 
 ---
 
-# 5. Simulation
+## 🔘 Push-Button Clock Input
 
-Before hardware implementation, the circuit can be simulated using digital circuit simulation software.
-
-Simulation allows verification of:
-
-• Proper counting sequence
-• Correct display decoding
-• Accurate timing of counter transitions
-
-This helps ensure the circuit functions correctly before building the physical hardware.
+| Action | Result |
+|--------|--------|
+| Button Press | Generates one clock pulse |
+| Each Pulse | Increments counter by 1 |
+| After 99 | Auto-resets to 00 |
 
 ---
 
-# 6. Hardware Implementation
+## 🔄 Auto-Reset Logic
 
-After successful simulation, the circuit can be implemented using:
+```
+Units Counter: 0→1→2→3→4→5→6→7→8→9→0 (carry out)
+                                          ↓
+                              Tens Counter increments
+                              
+Tens Counter:  0→1→2→3→4→5→6→7→8→9→0 (full reset)
+```
 
-• Digital ICs (7490 and 7447)
-• Two 7-segment displays
-• Current-limiting resistors
-• A push-button switch
-• Breadboard or PCB connections
-
-The physical implementation demonstrates the real-world behavior of the digital counter.
+When both counters reset → Display returns to **00** ✅
 
 ---
 
-# 7. Conclusion
+## 📏 Expandability
 
-This project demonstrates the design of a **two-digit digital counter using BCD counters and decoder circuits**. The system provides a clear visual representation of numerical counting using 7-segment displays.
+> The modular design makes expansion trivially simple:
 
-The design highlights important concepts in digital electronics, including:
+| Digits | Counter ICs | Decoder ICs | Range |
+|--------|------------|-------------|-------|
+| 2 | 2× 7490 | 2× 7447 | 00–99 |
+| 3 | 3× 7490 | 3× 7447 | 000–999 |
+| 4 | 4× 7490 | 4× 7447 | 0000–9999 |
 
-• Binary coded decimal counting
-• Decoder operation
-• Display interfacing
-• Modular circuit expansion
+Simply connect the **carry output** of one 7490 to the **clock input** of the next!
 
-Because of its flexible structure, the design can easily be extended to create larger counters for various digital electronics applications.
+---
+
+## 🧪 Simulation & Hardware
+
+**Simulation verified:**
+- ✅ Correct counting sequence (00 → 99 → 00)
+- ✅ Accurate BCD decoding on both displays
+- ✅ Proper counter transition timing
+- ✅ Auto-reset functionality
+
+**Hardware implementation using:**
+- 2× 7490 ICs + 2× 7447 ICs
+- 2× Common-anode 7-segment displays
+- Current-limiting resistors
+- Push-button switch
+- Breadboard / PCB
+
+---
+
+## ✅ Conclusion
+
+This project successfully demonstrates a **modular two-digit BCD counter** using classic TTL digital ICs. It reinforces fundamental digital electronics principles including decade counting, BCD decoding, display interfacing, and cascaded counter design.
+
+> *"Classic digital logic — simple building blocks creating powerful counting systems."*
+
+---
+
+## 🛠️ Tools & Technologies
+
+`7490 BCD Counter` · `7447 Decoder` · `7-Segment Display` · `TTL Logic ICs` · `Digital Circuit Simulation` · `Breadboard Implementation`
+
+---
+
+## 👤 About
+
+| | |
+|-|---|
+| 👨‍💻 **Student** | Amir Rehman |
+| 🏛️ **Institution** | NUST — PNEC, Karachi |
+| 🌐 **GitHub** | [@amirrehman19](https://github.com/amirrehman19) |
+
+---
+
+⬅️ *Back to [University Projects Portfolio](../README.md)*
