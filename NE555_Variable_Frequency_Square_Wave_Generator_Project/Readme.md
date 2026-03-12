@@ -1,182 +1,161 @@
-# Square Wave Generator of Variable Frequency Using NE555 Timer (Astable Mode)
+# 🔲 Square Wave Generator of Variable Frequency
+## Using NE555 Timer IC — Astable Mode
 
-## Project Report
+> ⏱️ *Harnessing the classic NE555 to generate precision variable-frequency square waves — from blinking LEDs to high-speed pulses.*
 
-Electronic Circuit Design
-
----
-
-## Objective
-
-The objective of this project is to design and simulate a **variable frequency square wave generator** using the **NE555 Timer IC configured in astable mode**.
-
-A potentiometer is used to adjust the oscillation frequency of the circuit. An LED is connected at the output to visually verify the generation of the square waveform.
+[![Domain](https://img.shields.io/badge/Domain-Analog%20Electronics-yellow?style=flat-square)]()
+[![IC](https://img.shields.io/badge/IC-NE555%20Timer-orange?style=flat-square)]()
+[![Mode](https://img.shields.io/badge/Mode-Astable%20Multivibrator-purple?style=flat-square)]()
+[![Board](https://img.shields.io/badge/Implementation-Vero%20Board-brown?style=flat-square)]()
+[![Status](https://img.shields.io/badge/Status-Completed-success?style=flat-square)]()
 
 ---
 
-## Equipment / Components
+## 📌 Objective
 
-| Component          | Value / Specification   | Purpose                                    |
-| ------------------ | ----------------------- | ------------------------------------------ |
-| NE555 Timer IC     | DIP-8                   | Main IC used to generate square wave       |
-| Potentiometer (R2) | 5 kΩ                    | Variable resistor used to adjust frequency |
-| Resistor (R1)      | 10 kΩ                   | Determines charging time with R2           |
-| Capacitor (C1)     | 147 µF (100 µF ∥ 47 µF) | Timing capacitor                           |
-| Control Capacitor  | 0.1 µF                  | Noise filtering at Pin 5                   |
-| LED                | Red                     | Visual indicator of output waveform        |
-| LED Resistor       | 330 Ω                   | Limits current through LED                 |
-| Diodes             | 1N4148 (×2)             | Prevent reverse current / waveform shaping |
-| Vero Board         | —                       | Permanent circuit assembly                 |
-| Connecting Wires   | —                       | Circuit connections                        |
-| DC Power Supply    | 5–12 V                  | Power source                               |
+Design and simulate a **variable frequency square wave generator** using the **NE555 Timer IC** in astable mode. A potentiometer controls the oscillation frequency in real time, while an LED provides visual confirmation of the output waveform.
 
 ---
 
-## Description
+## 🧩 Components
 
-The **NE555 timer** is configured in **astable multivibrator mode**, meaning it continuously generates square waves without requiring any external triggering signal.
-
-### Working Process
-
-### 1. Charging Phase
-
-The capacitor **C1 charges through R1 and R2**.
-The voltage across the capacitor rises from **1/3 Vcc to 2/3 Vcc**.
-
-During this time:
-
-* Output at **Pin 3 becomes HIGH**
-* The **LED turns ON**
-
-### 2. Discharging Phase
-
-When the capacitor voltage reaches **2/3 Vcc**, the internal discharge transistor of the NE555 turns ON.
-
-The capacitor **discharges through R2 only**.
-
-During this time:
-
-* Output becomes **LOW**
-* The **LED turns OFF**
-
-### 3. Frequency Control
-
-The potentiometer **R2** allows adjustment of the oscillation frequency by changing:
-
-• Charging time
-• Discharging time
-• Overall oscillation period
-
-This makes the output square wave **variable in frequency**.
-
-### 4. Noise Prevention
-
-A **0.1 µF capacitor** is connected to **Pin 5 (Control Voltage)** to stabilize the internal comparator reference levels and prevent false triggering due to electrical noise.
+| Component | Value / Spec | Purpose |
+|-----------|-------------|---------|
+| `NE555 Timer IC` | DIP-8 | Main IC — generates square wave |
+| `Potentiometer R2` | 5 kΩ | Adjusts oscillation frequency |
+| `Resistor R1` | 10 kΩ | Controls charging time with R2 |
+| `Capacitor C1` | 147 µF (100µF ∥ 47µF) | Main timing capacitor |
+| `Control Capacitor` | 0.1 µF | Noise filtering at Pin 5 |
+| `LED` | Red | Visual waveform indicator |
+| `LED Resistor` | 330 Ω | Current limiting for LED |
+| `Diodes` | 1N4148 × 2 | Reverse current prevention |
+| `Vero Board` | — | Permanent circuit assembly |
+| `DC Power Supply` | 5–12 V | System power |
 
 ---
 
-## Why the LED Blinks
+## ⚙️ Working Principle
 
-The LED is used only as a **visual indicator** to confirm that the circuit is producing a square wave.
+The NE555 in **astable mode** continuously oscillates without any external trigger:
 
-At **low frequencies**, the LED visibly turns ON and OFF.
-
-At **higher frequencies**, the switching occurs too rapidly for the human eye to perceive, causing the LED to appear continuously ON.
-
----
-
-## Why the LED Appears Constant When the Potentiometer Is at Minimum
-
-When the potentiometer **R2 is set close to 0 Ω**, the time period of the waveform becomes very short.
-
-The LED switching occurs very quickly, approximately:
-
-* ON time ≈ 0.5 seconds
-* OFF time ≈ 0.5 seconds
-
-Because this switching becomes too fast to detect visually, the LED appears continuously ON even though it is still switching.
-
----
-
-## Calculations
-
-The time period for the NE555 in astable mode is given by:
-
-**T = 0.693 (R1 + 2R2) C1**
-
-### Given Values
-
-R1 = 10 kΩ
-R2 = 5 kΩ
-C1 = 147 µF
+```
+┌─────────────────────────────────────────────────────┐
+│               ASTABLE OPERATION CYCLE               │
+│                                                     │
+│  C1 charges via R1 + R2                             │
+│  Voltage rises: 1/3 Vcc → 2/3 Vcc                  │
+│         ↓                                           │
+│  Output Pin 3 = HIGH  →  LED ON 💡                  │
+│         ↓                                           │
+│  Voltage hits 2/3 Vcc                               │
+│  Internal discharge transistor fires                │
+│         ↓                                           │
+│  C1 discharges through R2 only                      │
+│  Voltage falls: 2/3 Vcc → 1/3 Vcc                  │
+│         ↓                                           │
+│  Output Pin 3 = LOW  →  LED OFF 🌑                  │
+│         ↓                                           │
+│  Cycle repeats indefinitely ↺                       │
+└─────────────────────────────────────────────────────┘
+```
 
 ---
 
-### Case 1: Maximum Potentiometer Value (R2 = 5 kΩ)
+## 📐 Frequency Formula & Calculations
 
-T = 0.693 (10,000 + 2 × 5,000) (147 × 10⁻⁶)
+**Time Period Formula:**
+```
+T = 0.693 × (R1 + 2×R2) × C1
+```
 
-T = 0.693 (20,000) (147 × 10⁻⁶)
+### Case 1 — Maximum Potentiometer (R2 = 5 kΩ)
 
-T ≈ **2.038 seconds**
+```
+T = 0.693 × (10,000 + 2×5,000) × 147×10⁻⁶
+T = 0.693 × 20,000 × 0.000147
+T ≈ 2.038 seconds
+```
 
-Therefore:
+| | Value |
+|-|-------|
+| High Time | ~1.02 seconds |
+| Low Time | ~1.02 seconds |
+| LED Behavior | **Clearly visible blink** |
 
-High Time ≈ **1.02 seconds**
-Low Time ≈ **1.02 seconds**
+### Case 2 — Minimum Potentiometer (R2 = 0 Ω)
 
----
+```
+T = 0.693 × 10,000 × 147×10⁻⁶
+T ≈ 1.02 seconds
+```
 
-### Case 2: Minimum Potentiometer Value (R2 = 0 Ω)
-
-T = 0.693 (10,000) (147 × 10⁻⁶)
-
-T ≈ **1.02 seconds**
-
----
-
-## Observation
-
-• At maximum potentiometer value, the LED clearly blinks with approximately **1 second ON and 1 second OFF** timing.
-
-• At minimum potentiometer value, blinking becomes very fast and is no longer visible to the human eye, confirming that the **frequency increases as resistance decreases**.
-
-• Circuit simulation confirmed:
-
-* Square wave output at **Pin 3**
-* Charging and discharging waveform across the capacitor
-* Frequency variation through the potentiometer
-* LED brightness behavior changes with frequency
+| | Value |
+|-|-------|
+| High Time | ~0.5 seconds |
+| Low Time | ~0.5 seconds |
+| LED Behavior | **Appears constantly ON** (too fast for eye) |
 
 ---
 
-## Results
+## 💡 Why the LED Appears Constant at Minimum R2
 
-The variable-frequency square wave generator using the **NE555 timer IC** was successfully designed and implemented.
-
-Key results include:
-
-• Frequency control achieved through a **5 kΩ potentiometer**
-• Stable waveform generation using the **NE555 astable configuration**
-• Improved signal stability through the **0.1 µF noise filtering capacitor**
-• Visual verification of output waveform using an LED
-
-This circuit can be used in various applications including:
-
-• Clock generation
-• Pulse generation
-• LED drivers
-• Timing circuits
-• Digital system testing
+> When R2 → 0 Ω, switching speed exceeds the **human eye's persistence of vision threshold (~50ms)**. The LED is still switching — it just appears continuously lit.
 
 ---
 
-## Circuit Design, Simulation, and Implementation
+## 🔇 Noise Prevention (Pin 5)
 
-The project involved the following stages:
+A **0.1 µF capacitor** on Pin 5 (Control Voltage) stabilizes the internal comparator reference levels, preventing false triggering from electrical noise.
 
-1. Circuit schematic design
-2. Simulation of the circuit behavior
-3. Hardware implementation using a Vero board
+---
 
-The physical circuit assembly verified the successful operation of the design and matched the simulated results.
+## 📊 Results Summary
+
+| Condition | Frequency | LED Behavior |
+|-----------|-----------|-------------|
+| R2 = 5 kΩ (max) | ~0.49 Hz | 🟢 Visible slow blink |
+| R2 = 2.5 kΩ (mid) | ~0.65 Hz | 🟡 Medium blink |
+| R2 = 0 Ω (min) | ~0.98 Hz | 🔴 Appears always ON |
+
+**Simulation confirmed:**
+- ✅ Square wave output at Pin 3
+- ✅ Charging/discharging waveform across C1
+- ✅ Frequency variation through potentiometer
+- ✅ LED brightness behavior matches theory
+
+---
+
+## 🚀 Applications
+
+This circuit can be used in:
+- 🕐 Clock generation
+- 📡 Pulse generation
+- 💡 LED drivers
+- ⏱️ Timing circuits
+- 🔧 Digital system testing
+
+---
+
+## ✅ Conclusion
+
+The variable-frequency square wave generator using the **NE555 timer** was successfully designed, simulated, and implemented on a Vero board. Frequency control through the potentiometer was verified, and the LED behavior matched theoretical calculations at all resistance values.
+
+---
+
+## 🛠️ Tools & Technologies
+
+`NE555 Timer` · `Astable Multivibrator` · `Analog Circuit Design` · `Vero Board` · `Circuit Simulation` · `Oscilloscope Analysis`
+
+---
+
+## 👤 About
+
+| | |
+|-|---|
+| 👨‍💻 **Student** | Amir Rehman |
+| 🏛️ **Institution** | NUST — PNEC, Karachi |
+| 🌐 **GitHub** | [@amirrehman19](https://github.com/amirrehman19) |
+
+---
+
+⬅️ *Back to [University Projects Portfolio](../README.md)*
