@@ -1,248 +1,173 @@
-# Noise Reduction in Audio Signal Using Digital Filtering
+# 🔊 Noise Reduction in Audio Signal Using Digital Filtering
 
-## Project Report
+> 🎙️ *Eliminating narrowband interference while preserving the natural clarity of speech — through precision digital filter design.*
 
----
-
-# 1. Problem Statement
-
-Modern audio recordings often suffer from degradation due to unwanted electronic interference. The objective of this project is to enhance a noisy audio signal in which the desired voice signal is contaminated by high-frequency electronic noise.
-
-The challenge is to design a filtering technique that removes the interference while preserving the natural characteristics of the speech signal.
-
-### Goal
-
-Reduce a **6 kHz interference tone** using a **digital notch filter** while maintaining the integrity of the speech spectrum.
+[![Domain](https://img.shields.io/badge/Domain-Signal%20Processing-blue?style=flat-square)]()
+[![Tool](https://img.shields.io/badge/Tool-MATLAB-orange?style=flat-square&logo=mathworks)]()
+[![Filter](https://img.shields.io/badge/Filter-IIR%20Notch-purple?style=flat-square)]()
+[![Noise](https://img.shields.io/badge/Noise%20Frequency-6%20kHz-red?style=flat-square)]()
+[![Status](https://img.shields.io/badge/Status-Completed-success?style=flat-square)]()
 
 ---
 
-# 2. Introduction
+## 📌 Problem Statement
 
-Digital filtering plays an important role in signal processing for improving the quality of audio recordings. By analyzing the characteristics of both the noise and the speech signal, it becomes possible to design filters that suppress specific unwanted frequency components.
+Modern audio recordings often suffer from degradation caused by unwanted electronic interference. This project targets a **6 kHz high-frequency tone** contaminating a voice signal and removes it using a precisely tuned **IIR Notch Filter** in MATLAB — without affecting the speech spectrum.
 
-A **notch filter** is particularly useful when the noise exists at a known frequency. It removes a very narrow frequency band while leaving the rest of the signal unaffected.
-
-In this project, a **6 kHz narrowband interference** is removed using an **IIR notch filter implemented in MATLAB**. The effectiveness of the filtering process is evaluated using frequency spectrum analysis before and after filtering.
+> 🎯 **Goal:** Remove a 6 kHz interference tone using a digital notch filter while maintaining full speech integrity.
 
 ---
 
-# 3. Theory and Background
+## 📖 Introduction
 
-## 3.1 Voice Frequency Range
-
-Typical speech signals occupy the following frequency range:
-
-• **300 Hz – 3400 Hz**
-
-Most important speech information exists below **4 kHz**, which allows higher frequencies to be filtered without significantly affecting speech clarity.
+Digital filtering is a core technique in signal processing for improving audio quality. A **Notch Filter (Band-Stop Filter)** is ideal when noise exists at a known frequency — it removes a very narrow band while leaving the rest of the signal completely unaffected.
 
 ---
 
-## 3.2 Nature of Interference Noise
+## 🧠 Theory & Background
 
-The noise present in the recording appears as a high-frequency tone around **6000 Hz**. This type of interference is commonly caused by:
+### 🎙️ Voice Frequency Range
 
-• Electronic interference
-• Hardware coupling
-• Power supply noise
-• Recording system artifacts
+| Parameter | Value |
+|-----------|-------|
+| Speech Band | 300 Hz – 3400 Hz |
+| Safe Filter Zone | Above 4 kHz |
+| Interference Frequency | **6000 Hz** |
 
----
+> Since most critical speech content exists below 4 kHz, the 6 kHz region can be safely targeted without affecting intelligibility.
 
-## 3.3 Notch Filtering
+### 🔴 Nature of Interference
 
-A **Notch Filter**, also known as a **Band-Stop Filter**, removes a very narrow frequency band while allowing the remaining frequencies to pass through.
+The 6 kHz noise is a narrowband tone commonly caused by:
+- ⚡ Electronic interference
+- 🔌 Hardware coupling
+- 🔋 Power supply noise
+- 🎙️ Recording system artifacts
 
-### Advantages
+### 🔧 Notch Filter Parameters
 
-1. Precisely removes a specific interfering frequency
-2. Causes minimal distortion to the original signal
-3. Simple and computationally efficient
+| Parameter | Value |
+|-----------|-------|
+| Filter Type | IIR Notch (Band-Stop) |
+| Noise Frequency | 6000 Hz |
+| Quality Factor (Q) | **60** |
 
-### Filter Parameters Used
-
-Noise Frequency: **6000 Hz**
-
-Quality Factor (Q): **60**
-
-The **Q factor** controls the sharpness of the notch. A higher value produces a narrower filter that removes only the unwanted frequency.
-
----
-
-# 4. Methodology
-
-The following procedure was used to reduce the noise in the audio signal:
-
-1. Load the noisy audio file into MATLAB.
-2. Identify the interference frequency (6 kHz).
-3. Design an **IIR notch filter** using MATLAB’s `iirnotch()` function.
-4. Apply **zero-phase filtering** using `filtfilt()` to avoid phase distortion.
-5. Perform **frequency domain analysis** using Fast Fourier Transform (FFT).
-6. Compare the spectrum before and after filtering.
-7. Save and playback the cleaned audio signal.
+> 💡 A **high Q = 60** produces an extremely narrow notch — surgically removing only the interference frequency with negligible impact on neighboring content.
 
 ---
 
-# 5. MATLAB Code Explanation
+## ⚙️ Methodology
 
-## Workspace Preparation
-
-**clear;**
-
-Removes all variables from the workspace so the program starts with a clean environment.
-
-**close all;**
-
-Closes any previously opened figure windows.
-
-**clc;**
-
-Clears the command window.
+```
+┌──────────────────────────────────────────────────────────┐
+│                   PROCESSING PIPELINE                    │
+│                                                          │
+│  Load Audio → Identify 6kHz Noise → Design IIR Filter   │
+│       ↓                                                  │
+│  Apply filtfilt() → FFT Analysis → Compare Spectra       │
+│       ↓                                                  │
+│  Save Cleaned Audio → Playback Comparison                │
+└──────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## Loading the Audio File
+## 💻 MATLAB Code Breakdown
 
-`noisy_file = 'audio_with_noise.wav';`
+### Workspace Setup
+```matlab
+clear;       % Clean workspace
+close all;   % Close all figures
+clc;         % Clear command window
+```
 
-Specifies the audio file to be processed.
+### Load & Define Parameters
+```matlab
+[noisy_voice, Fs] = audioread('audio_with_noise.wav');
+NOISE_FREQ = 6000;           % Target interference frequency
+Wo = NOISE_FREQ / (Fs/2);   % Normalize to Nyquist frequency
+Q  = 60;                     % Quality factor — narrow notch
+```
 
-`[noisy_voice, Fs] = audioread(noisy_file);`
+### Design & Apply Filter
+```matlab
+[b, a] = iirnotch(Wo, Wo/Q);              % Design notch filter
+cleaned_voice = filtfilt(b, a, noisy_voice); % Zero-phase filtering
+```
 
-Loads the audio signal.
+### Frequency Analysis
+```matlab
+Y_noisy   = fft(noisy_voice, N);
+P_noisy   = abs(Y_noisy(1:N/2+1) / N);   % Magnitude spectrum
+```
 
-• `noisy_voice` represents the audio data
-• `Fs` represents the sampling rate
-
----
-
-## Defining the Noise Frequency
-
-`NOISE_FREQ = 6000;`
-
-Defines the unwanted noise frequency at **6 kHz**.
-
----
-
-## Frequency Normalization
-
-`Wo = NOISE_FREQ / (Fs/2);`
-
-MATLAB requires frequencies to be normalized between **0 and 1** relative to the Nyquist frequency.
-
----
-
-## Quality Factor Selection
-
-`Q = 60;`
-
-The quality factor determines the width of the notch filter.
-
-• High Q → narrow and precise filtering
-• Low Q → wider frequency removal
+### Save Output
+```matlab
+audiowrite('cleaned_audio.wav', cleaned_voice, Fs);
+```
 
 ---
 
-## Notch Filter Design
+## 📊 Key MATLAB Functions
 
-`[b, a] = iirnotch(Wo, Wo/Q);`
-
-Generates the filter coefficients used to remove the interference frequency.
-
----
-
-## Applying the Filter
-
-`cleaned_voice = filtfilt(b, a, noisy_voice);`
-
-The `filtfilt()` function applies the filter forward and backward, resulting in **zero phase distortion** and preserving the natural sound of the voice.
+| Function | Purpose |
+|----------|---------|
+| `audioread()` | Load noisy .wav audio file |
+| `iirnotch()` | Design IIR notch filter coefficients |
+| `filtfilt()` | Apply zero-phase forward-backward filtering |
+| `fft()` | Convert signal to frequency domain |
+| `abs()` | Extract magnitude spectrum |
+| `audiowrite()` | Save cleaned output as .wav |
+| `subplot()` / `plot()` | Visualize spectra before & after |
 
 ---
 
-## Frequency Domain Analysis
+## 📈 Results
 
-Fast Fourier Transform (FFT) is used to analyze the signal in the frequency domain.
+| Measurement | Before Filtering | After Filtering |
+|------------|-----------------|----------------|
+| 6 kHz Spike | 🔴 Strong peak visible | ✅ Peak eliminated |
+| Speech Band (300–3400 Hz) | ✅ Intact | ✅ Fully preserved |
+| Phase Distortion | — | ✅ Zero (`filtfilt` used) |
+| Audio Clarity | ⚠️ Noisy | ✅ Clean & natural |
 
-`Y_noisy = fft(noisy_voice, N);`
-
-Converts the noisy signal from the time domain into the frequency domain.
-
-`P_noisy = abs(Y_noisy(1:N/2+1)/N);`
-
-Extracts the magnitude spectrum of the positive frequencies.
-
-The same process is applied to the filtered signal and the difference signal to observe the removed noise.
-
----
-
-## Visualization
-
-Several MATLAB plotting functions are used:
-
-**subplot()** – divides the figure window into multiple plots
-**plot()** – generates the frequency spectrum graphs
-**xlabel() and ylabel()** – label the graph axes
-**xlim()** – controls the displayed frequency range
-**legend()** – identifies plotted signals
-**sgtitle()** – adds an overall title for the figure
+### Spectral Plots Generated:
+- 📉 **Before Filtering** — strong 6 kHz spike clearly visible
+- 📉 **After Filtering** — spike eliminated, speech band untouched
+- 📉 **Difference Spectrum** — isolated removed noise component
 
 ---
 
-## Saving the Cleaned Audio
+## ✅ Conclusion
 
-`audiowrite(output_file, cleaned_voice, Fs);`
+The IIR notch filter effectively **removed the 6 kHz interference** while fully preserving the speech signal. This experiment validates the power of frequency-selective digital filtering for practical audio enhancement applications.
 
-Stores the filtered audio signal as a new `.wav` file.
-
-The program can also playback the original and cleaned audio signals to allow direct comparison.
+> 🔮 *Future improvements may include adaptive filtering, spectral subtraction, or ML-based noise reduction for complex noise environments.*
 
 ---
 
-# 6. Results and Discussion
+## 📚 References
 
-## Spectral Analysis
-
-Three plots were used to evaluate the effectiveness of the filtering process.
-
-### Before Filtering
-
-A strong peak appears at **6000 Hz**, indicating the presence of interference noise.
-
-### After Filtering
-
-The peak at **6 kHz** is significantly reduced, confirming successful noise suppression.
-
-### Difference Spectrum
-
-The difference signal represents the removed noise component, demonstrating that the filter selectively eliminated the interference frequency.
+- Ahlstrom & Tompkins (1985) — *Digital Filters for Real-Time ECG Signal Processing*, IEEE
+- Chicharo & Ng (1990) — *Gradient-Based Adaptive IIR Notch Filtering*, IEEE
+- Mojiri et al. (2007) — *Time-Domain Signal Analysis Using Adaptive Notch Filter*, IEEE
 
 ---
 
-## Audio Quality Observation
+## 🛠️ Tools & Technologies
 
-• The cleaned audio shows significantly reduced high-frequency noise.
-• Speech clarity remains preserved.
-• The filtering process introduces minimal distortion.
+`MATLAB` · `IIR Notch Filter` · `FFT Analysis` · `filtfilt()` · `Digital Signal Processing` · `Audio Processing`
 
 ---
 
-# 7. Conclusion
+## 👤 About
 
-The digital notch filter effectively removed the **6 kHz interference noise** from the audio signal while preserving the important speech components.
-
-This experiment demonstrates the effectiveness of **frequency-selective digital filtering** for improving audio quality in practical signal processing applications.
-
-Future improvements may include the use of **adaptive filtering**, **spectral subtraction**, or **machine learning based noise reduction techniques** to handle more complex noise environments.
+| | |
+|-|---|
+| 👨‍💻 **Student** | Amir Rehman |
+| 🏛️ **Institution** | NUST — PNEC, Karachi |
+| 🌐 **GitHub** | [@amirrehman19](https://github.com/amirrehman19) |
 
 ---
 
-# 8. References
-
-Ahlstrom, M.L. and Tompkins, W.J. (1985).
-Digital Filters for Real-Time ECG Signal Processing Using Microprocessors. IEEE Transactions on Biomedical Engineering.
-
-Chicharo, J.F. and Ng, T.S. (1990).
-Gradient-Based Adaptive IIR Notch Filtering for Frequency Estimation. IEEE Transactions on Acoustics, Speech, and Signal Processing.
-
-Mojiri, M., Karimi-Ghartemani, M. and Bakhshai, A. (2007).
-Time-Domain Signal Analysis Using Adaptive Notch Filter. IEEE Transactions on Signal Processing.
+⬅️ *Back to [University Projects Portfolio](../README.md)*
