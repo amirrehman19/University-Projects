@@ -1,7 +1,8 @@
 # 🔁 Wien Bridge Oscillator — LM358N Op-Amp | Proteus Simulation
 
 <p align="center">
-  <img src="docs/schematic.png" alt="Wien Bridge Oscillator Schematic" width="800"/>
+  <img width="1285" height="685" alt="schematic" src="https://github.com/user-attachments/assets/75398e81-aeff-470a-b600-430bc30d89c7" />
+
 </p>
 
 <p align="center">
@@ -79,7 +80,8 @@ $$A_v = 1 + \frac{R_F}{R_G} = 1 + \frac{100k}{10k} \approx ... $$
 The oscilloscope output (captured in Proteus) confirms clean sinusoidal oscillation at the expected frequency.
 
 <p align="center">
-  <img src="docs/oscilloscope.png" alt="Oscilloscope Output" width="700"/>
+ <img width="448" height="288" alt="results" src="https://github.com/user-attachments/assets/36884ab0-df49-4caa-9e37-cb4e7f285d3f" />
+
 </p>
 
 **Observed Output:**
