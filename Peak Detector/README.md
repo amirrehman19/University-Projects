@@ -215,9 +215,9 @@ In the precision version, the op-amp compensates for the diode drop by placing t
 
 ## References
 
-- Video: *Peak Detector Circuit Design* — ALL ABOUT ELECTRONICS (YouTube)
+- Video: GenxiTechSolutions
 - Proteus Design Suite simulation
-- Sedra & Smith — *Microelectronic Circuits*
+- Desgined by: Amir Rehman And Sonia Azhar Siddiqui
 - Texas Instruments — Op-Amp application notes
 
 ---
