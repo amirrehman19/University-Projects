@@ -57,6 +57,8 @@ This project demonstrates a **fully automatic LDR-based light control circuit** 
 | 🌞 Daytime (bright light) | Low | LOW | OFF |
 | 🌙 Nighttime (dark) | High | HIGH | ON |
 
+<img width="898" height="430" alt="day" src="https://github.com/user-attachments/assets/ec6baf08-57d0-4400-bea2-626c8c039276" />
+
 <img width="906" height="399" alt="night" src="https://github.com/user-attachments/assets/e678b803-d211-47de-86ce-c9ffdf3f695b" />
 
 
